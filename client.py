@@ -19,7 +19,7 @@ while True:
         print("1.Search headlines ")
         print("2.List of sources")
         print("3.Quit")
-        option = input(int("your option is : "))
+        option = input("your option is : ")
 
         #search headlines menu
         if option == "1":
@@ -32,7 +32,7 @@ while True:
                 print("3.search for country")
                 print("3.list all new headlines")
                 print("4.back to the main menu")
-                option2 = input(int("your option is : "))
+                option2 = input("your option is : ")
 
                 if option2 == "1":
 
@@ -60,7 +60,7 @@ while True:
                 print("3.search by language")
                 print("4.list all")
                 print("5.back to the main menu")
-                option3 = input(int("your option is : "))
+                option3 = input("your option is : ")
 
                 if option3 == "1":
 
