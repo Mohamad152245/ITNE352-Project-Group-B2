@@ -23,32 +23,70 @@ while True:
 
         #search headlines menu
         if option == "1":
-            print("Choose the number of your option")
-            print("1.search for key word")
-            print("2.search for caregory")
-            print("3.search for country")
-            print("3.list all new headlines")
-            print("4.back to the main menu")
-            option2 = input(int("your option is : "))
+
+            while True:
+
+                print("Choose the number of your option")
+                print("1.search for key word")
+                print("2.search for caregory")
+                print("3.search for country")
+                print("3.list all new headlines")
+                print("4.back to the main menu")
+                option2 = input(int("your option is : "))
+
+                if option2 == "1":
+
+                    break
+                elif option2 == "2":
+
+                    break
+                elif option2 == "3":
+
+                    break
+                elif option2 == "4":
+                    break
+                else :
+                    print("Invalid option")
+            
 
         #list of sources menu
         elif option == "2":
-            print("Choose the number of your option")
-            print("1.search for caregory")
-            print("2.search for country")
-            print("3.search by language")
-            print("4.list all")
-            print("5.back to the main menu")
-            option3 = input(int("your option is : "))
+
+            while True:
+
+                print("Choose the number of your option")
+                print("1.search for caregory")
+                print("2.search for country")
+                print("3.search by language")
+                print("4.list all")
+                print("5.back to the main menu")
+                option3 = input(int("your option is : "))
+
+                if option3 == "1":
+
+                    break
+                elif option3 == "2":
+
+                    break
+                elif option3 == "3":
+
+                    break
+                elif option3 == "4":
+
+                    break
+                elif option3 == "5":
+                    break
+                else :
+                    print("Invalid option")
          
         #invalid option selection  
         else:
             print("Invalid option")
-
 
             
 
     
     
     except :    
+        print("error")
         break
