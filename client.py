@@ -36,13 +36,13 @@ while True:
 
                 if option2 == "1":
 
-                    break
+                    pass
                 elif option2 == "2":
 
-                    break
+                    pass
                 elif option2 == "3":
 
-                    break
+                    pass
                 elif option2 == "4":
                     break
                 else :
@@ -64,16 +64,16 @@ while True:
 
                 if option3 == "1":
 
-                    break
+                    pass
                 elif option3 == "2":
 
-                    break
+                    pass
                 elif option3 == "3":
 
-                    break
+                    pass
                 elif option3 == "4":
 
-                    break
+                    pass
                 elif option3 == "5":
                     break
                 else :
