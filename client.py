@@ -1,11 +1,11 @@
 import socket
 
 #creating client socket 
-client_Sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #client to server connection 
 try:
-    client_Sock.connect(('127.0.0.1',1010))
+    client_socket.connect(('127.0.0.1',1010))
 except:
     print("connaction  faild")
     exit(0) 
