@@ -22,10 +22,10 @@ while True:
        if option == "1":
             print("Choose the number of your option")
             print("1.search for key word")
-            print("search for caregory")
-            print("search for country")
-            print("list all new headlines")
-            print("back to the main menu")
+            print("2.search for caregory")
+            print("3.search for country")
+            print("3.list all new headlines")
+            print("4.back to the main menu")
             option2 = input(int("your option is : "))
     
 
