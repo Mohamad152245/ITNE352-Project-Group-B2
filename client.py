@@ -11,8 +11,14 @@ except:
 
 
 while True:
-    print("Choose the number of your option")
-    print("1.Search headlines ")
-    print("2.List of sources")
-    print("3.Quit")
-    option = input(int("your option is : "))
+    try:
+
+        print("Choose the number of your option")
+        print("1.Search headlines ")
+        print("2.List of sources")
+        print("3.Quit")
+        option = input(int("your option is : "))
+    
+    
+    except :    
+        break
