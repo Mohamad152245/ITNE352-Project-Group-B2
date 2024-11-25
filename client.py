@@ -7,3 +7,10 @@ try:
 except:
     print("connaction  faild")
     exit(0) 
+
+
+
+print("request an option # :")
+print("1.Search headlines ")
+print("2.List of sources")
+print("3.Quit")
