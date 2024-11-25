@@ -5,7 +5,7 @@ client_Sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #client to server connection 
 try:
-    client_Sock.connect(('192.168.0.1',5000))
+    client_Sock.connect(('127.0.0.1',1010))
 except:
     print("connaction  faild")
     exit(0) 
