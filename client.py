@@ -78,10 +78,18 @@ while True:
                     break
                 else :
                     print("Invalid option")
+
+        elif option == "3":
+            print("Quitting") 
+            print("connection is closed")
+            client_socket.close() 
+            break
+
          
         #invalid option selection  
         else:
             print("Invalid option")
+
 
             
 
