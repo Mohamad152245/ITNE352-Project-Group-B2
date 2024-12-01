@@ -34,20 +34,46 @@ while True:
                 print("1.search for key word")
                 print("2.search for caregory")
                 print("3.search for country")
-                print("3.list all new headlines")
-                print("4.back to the main menu")
+                print("4.list all new headlines")
+                print("5.back to the main menu")
                 option2 = input("your option is : ")
 
                 if option2 == "1":
-
-                    pass
+                    # Search for a specific keyword
+                    client_socket.send("search".encode('ascii'))  # Send request type to server
+                    keyword = input("Enter a keyword to search for: ")
+                    client_socket.send(keyword.encode('ascii'))
+                    data = client_socket.recv(2048)
+                    print_data(data)
+                    print("Keyword search request sent to the server.")
+                   
                 elif option2 == "2":
-
-                    pass
+                    # Search by category
+                    client_socket.send("headlines".encode('ascii'))  # Send request type to server
+                    category = input("Choose a category (business, entertainment, general, sports, science, technology, health): ")
+                    client_socket.send(category.encode('ascii'))
+                    data = client_socket.recv(2048)
+                    print_data(data)
+                    print("Category search request sent to the server.")
+                    
                 elif option2 == "3":
-
-                    pass
+                    # Search by country
+                    client_socket.send("headlines".encode('ascii'))  # Send request type to server
+                    country = input("Choose a country (au, ca, jp, ae, sa, kr, us, ma): ")
+                    client_socket.send(country.encode('ascii'))
+                    data = client_socket.recv(2048)
+                    print_data(data)
+                    print("Country search request sent to the server.")
+                    
                 elif option2 == "4":
+                    # List all new headlines
+                    client_socket.send("headlines".encode('ascii'))  # Send request type to server
+                    data = client_socket.recv(2048)
+                    print_data(data)
+                    print("Request to list all headlines sent to the server.")
+
+                elif option2 == "5":
+                    # Back to the main menu
                     break
                 else :
                     print("Invalid option")
