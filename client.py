@@ -93,18 +93,41 @@ while True:
                 option3 = input("your option is : ")
 
                 if option3 == "1":
-
-                    pass
+                     # Search by category
+                    client_socket.send("sources".encode('ascii'))  # Send request type to server
+                    category = input("Choose a category (business, entertainment, general, sports, science, technology, health): ")
+                    client_socket.send(category.encode('ascii'))
+                    data = client_socket.recv(2048)
+                    print_data(data)
+                    print("Category filter request sent to the server.")
+                    
                 elif option3 == "2":
-
-                    pass
+                    # Search by country
+                    client_socket.send("sources".encode('ascii'))  # Send request type to server
+                    country = input("Choose a country (au, ca, jp, ae, sa, kr, us, ma): ")
+                    client_socket.send(country.encode('ascii'))
+                    data = client_socket.recv(2048)
+                    print_data(data)
+                    print("Country filter request sent to the server.")
+                    
                 elif option3 == "3":
-
-                    pass
+                    # Search by language
+                    client_socket.send("sources".encode('ascii'))  # Send request type to server
+                    language = input("Choose a language (en, ar): ")
+                    client_socket.send(language.encode('ascii'))
+                    data = client_socket.recv(2048)
+                    print_data(data)
+                    print("Language filter request sent to the server.")
+                    
                 elif option3 == "4":
+                    # List all sources
+                    client_socket.send("sources".encode('ascii'))  # Send request type to server
+                    data = client_socket.recv(2048)
+                    print_data(data)
+                    print("Request to list all sources sent to the server.")
 
-                    pass
                 elif option3 == "5":
+                    # Back to the main menu
                     break
                 else :
                     print("Invalid option")
