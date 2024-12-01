@@ -6,13 +6,11 @@ import requests
 api_key = '27d7c542059d496ba63e8330cd595bd6'
 
 print('----------------Server is Online----------------')
-
 passive_server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 passive_server_socket.bind(('127.0.0.1', 1010))
 
 print('----------------Server is Waiting----------------')
 passive_server_socket.listen(3)
-
 
 def handle_client(client_socket):
     client_name = client_socket.recv(2048).decode('ascii')
@@ -51,10 +49,10 @@ def handle_client(client_socket):
     # Process and save response
     if  response.status_code == 200:
         requested_data = response.json()
-        filename = f"{client_name}_{client_request}.json"
+        filename = client_name,'_',client_request,'.json'
         with open(filename, 'w') as f:
-            json.dump(requested_data, f, indent=4)
-        print('Data saved to' , filename)
+            client_socket.send(json.dump(requested_data, f, indent=4).encode('ascii'))
+        print('requested data saved to' , filename)
 
     else:
         print('Error in processing your request:', response.text)
