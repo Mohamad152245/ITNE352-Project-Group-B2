@@ -3,39 +3,66 @@ import threading
 import json
 import requests
 
-api_url = 'https://newsapi.org/'
 api_key = '27d7c542059d496ba63e8330cd595bd6'
 
 print('----------------Server is Online----------------')
 
-article_headline = input('Enter an article headline:')
 passive_server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-passive_server_socket.bind('127.0.0.1', 1010)
+passive_server_socket.bind(('127.0.0.1', 1010))
+
 print('----------------Server is Waiting----------------')
 passive_server_socket.listen(3)
 
+
 def handle_client(client_socket):
-    client_name = client_socket.recv(2048)
-    print('Client ', client_name.decode('ascii'), ' is connected to the server')
+    client_name = client_socket.recv(2048).decode('ascii')
+    print('Client', client_name, 'is connected.')
 
-    param = {'key': api_key, 'headline': article_headline}
+    # Receive client request type
+    client_request = client_socket.recv(2048).decode('ascii')  
+    print('Received the request:', client_request)
 
-    response = requests.get(api_url,param)
+    params = {'apiKey': api_key}
 
-    if response.status_code == 200:
-        requested_data = response.json()
-        with open('b2.json', 'w') as file:
-            json.dump(requested_data, file, indent=4)
+    if client_request == 'headlines':
+        # Retrieve headlines filtered by country, category, and language
+        params['country'] = input('Choose a country (au, ca, jp, ae, sa, kr, us, ma):')
+        params['category'] = input('Choose a category (business, entertainment, general, sports, science, technology, health):')
+        params['language'] = input('Choose a language (en, ar):')
+        response = requests.get('https://newsapi.org/v2/everything?q=business+OR+entertainment+OR+general+OR+health+OR+science+OR+sports+OR+technology&apiKey=27d7c542059d496ba63e8330cd595bd6', params=params)
+
+    elif client_request == 'sources':
+        # Retrieve sources filtered by country, category, and language
+        params['country'] = input('Choose a country (au, ca, jp, ae, sa, kr, us, ma):')
+        params['category'] = input('Choose a category (business, entertainment, general, sports, science, technology, health):')
+        params['language'] = input('Choose a language (en, ar):')
+        response = requests.get('https://newsapi.org/v2/top-headlines/sources?apiKey=27d7c542059d496ba63e8330cd595bd6', params=params)
+
+    elif client_request == 'search':
+        # Search for news articles by keyword
+        params['q'] = input('Enter keyword for searching articles:')
+        params['language'] = input('Choose a language (en, ar):')
+        params['country'] = input('Enter a specific country:')
+        response = requests.get('https://newsapi.org/v2/everything?apiKey=27d7c542059d496ba63e8330cd595bd6', params=params)
 
     else:
-        print('Something went wrong in proccessing your request:', response.text)
+        print('Invalid request')
+
+    # Process and save response
+    if  response.status_code == 200:
+        requested_data = response.json()
+        filename = f"{client_name}_{client_request}.json"
+        with open(filename, 'w') as f:
+            json.dump(requested_data, f, indent=4)
+        print('Data saved to' , filename)
+
+    else:
+        print('Error in processing your request:', response.text)
         print('Error code:', response.status_code)
 
-while True:
+    client_socket.close()
 
+while True:
     active_server_socket, address = passive_server_socket.accept()
     thread = threading.Thread(target=handle_client, args=(active_server_socket,address))
     thread.start()
-
-def handle_headlines(client_socket, client_name):
-    headline_url = 'https://newsapi.org/v2/everything?q=business+OR+entertainment+OR+general+OR+health+OR+science+OR+sports+OR+technology&apiKey=27d7c542059d496ba63e8330cd595bd6'
