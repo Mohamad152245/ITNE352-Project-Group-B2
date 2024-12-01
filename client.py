@@ -10,7 +10,7 @@ except:
     print("connaction  faild")
     exit(0) 
 
-def retrieve_data(data):
+def print_data(data):
     Data = data.decode('utf-8')
     print(Data)
 
