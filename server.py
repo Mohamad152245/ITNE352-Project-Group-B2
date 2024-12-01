@@ -22,17 +22,17 @@ def handle_client(client_socket):
     client_request = client_socket.recv(2048).decode('ascii')  
     print('Received the request:', client_request)
 
-    params = {'apiKey': api_key}
+    params = {'apiKey': api_key, 'limit': 15}
 
     if client_request == 'headlines':
-        # Retrieve headlines filtered by country, category, and language
+        #Retrieve headlines filtered by country, category, and language
         params['country'] = input('Choose a country (au, ca, jp, ae, sa, kr, us, ma):')
         params['category'] = input('Choose a category (business, entertainment, general, sports, science, technology, health):')
         params['language'] = input('Choose a language (en, ar):')
         response = requests.get('https://newsapi.org/v2/everything?q=business+OR+entertainment+OR+general+OR+health+OR+science+OR+sports+OR+technology&apiKey=27d7c542059d496ba63e8330cd595bd6', params=params)
 
     elif client_request == 'sources':
-        # Retrieve sources filtered by country, category, and language
+        #Retrieve sources filtered by country, category, and language
         params['country'] = input('Choose a country (au, ca, jp, ae, sa, kr, us, ma):')
         params['category'] = input('Choose a category (business, entertainment, general, sports, science, technology, health):')
         params['language'] = input('Choose a language (en, ar):')
@@ -62,6 +62,7 @@ def handle_client(client_socket):
 
     client_socket.close()
 
+#Multithreading
 while True:
     active_server_socket, address = passive_server_socket.accept()
     thread = threading.Thread(target=handle_client, args=(active_server_socket,address))
