@@ -6,62 +6,94 @@ import requests
 api_key = '27d7c542059d496ba63e8330cd595bd6'
 
 print('----------------Server is Online----------------')
+
 passive_server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-passive_server_socket.bind(('127.0.0.1', 1010))
+passive_server_socket.bind(('172.20.10.3', 1010))
 
 print('----------------Server is Waiting----------------')
 passive_server_socket.listen(3)
 
 def handle_client(client_socket):
-    client_name = client_socket.recv(2048).decode('ascii')
-    print('Client', client_name, 'is connected.')
-
-    # Receive client request type
-    client_request = client_socket.recv(2048).decode('ascii')  
+    # Receive the client request type (headlines, sources, or search)
+    client_request = client_socket.recv(2048).decode('ascii')
     print('Received the request:', client_request)
+    
+    # Ensure valid request
+    if client_request not in ['headlines', 'sources', 'search']:
+        print(f"Invalid request: {client_request}")
+        client_socket.send(f"Invalid request: {client_request}".encode('ascii'))
+        client_socket.close()
+        return
 
     params = {'apiKey': api_key, 'limit': 15}
 
+    # Depending on the request type, handle accordingly
     if client_request == 'headlines':
-        #Retrieve headlines filtered by country, category, and language
-        params['country'] = input('Choose a country (au, ca, jp, ae, sa, kr, us, ma):')
-        params['category'] = input('Choose a category (business, entertainment, general, sports, science, technology, health):')
-        params['language'] = input('Choose a language (en, ar):')
-        response = requests.get('https://newsapi.org/v2/everything?q=business+OR+entertainment+OR+general+OR+health+OR+science+OR+sports+OR+technology&apiKey=27d7c542059d496ba63e8330cd595bd6', params=params)
+        category = client_socket.recv(2048).decode('ascii')  # Receive category
+        country = client_socket.recv(2048).decode('ascii')  # Receive country
+        language = client_socket.recv(2048).decode('ascii')  # Receive language
+
+        params['language'] = language  # Always set language
+
+    # Check if we are using /top-headlines or /everything
+        if country:  # If country is specified, we should use /top-headlines
+                params['country'] = country
+                response = requests.get('https://newsapi.org/v2/top-headlines?apiKey=27d7c542059d496ba63e8330cd595bd6', params=params)
+        else:  # If no country is specified, use /everything and only use keywords and language
+                params['q'] = category  # Use category as search keywords for /everything
+                response = requests.get('https://newsapi.org/v2/everything?apiKey=27d7c542059d496ba63e8330cd595bd6', params=params)
 
     elif client_request == 'sources':
-        #Retrieve sources filtered by country, category, and language
-        params['country'] = input('Choose a country (au, ca, jp, ae, sa, kr, us, ma):')
-        params['category'] = input('Choose a category (business, entertainment, general, sports, science, technology, health):')
-        params['language'] = input('Choose a language (en, ar):')
+        category = client_socket.recv(2048).decode('ascii')  # Receive category
+        country = client_socket.recv(2048).decode('ascii')  # Receive country
+        language = client_socket.recv(2048).decode('ascii')  # Receive language
+
+        params['category'] = category
+        params['country'] = country
+        params['language'] = language
+
         response = requests.get('https://newsapi.org/v2/top-headlines/sources?apiKey=27d7c542059d496ba63e8330cd595bd6', params=params)
 
     elif client_request == 'search':
-        # Search for news articles by keyword
-        params['q'] = input('Enter keyword for searching articles:')
-        params['language'] = input('Choose a language (en, ar):')
-        params['country'] = input('Enter a specific country:')
-        response = requests.get('https://newsapi.org/v2/everything?apiKey=27d7c542059d496ba63e8330cd595bd6', params=params)
+        keyword = client_socket.recv(2048).decode('ascii')  # Receive keyword for searching
+        language = client_socket.recv(2048).decode('ascii')  # Receive language
+        country = client_socket.recv(2048).decode('ascii')  # Receive country
 
+    # Set up parameters for the /everything endpoint
+        params['q'] = keyword  # The keyword for the search
+        params['language'] = language  # Language for filtering
+
+    # Only add country to params if it's provided, but note that it's not supported in /everything endpoint
+        if country:
+             print("Country parameter is not supported in /everything. It will be ignored.")
+
+    # Perform the request to /everything endpoint, without including the 'country' parameter
+        response = requests.get('https://newsapi.org/v2/everything?apiKey=27d7c542059d496ba63e8330cd595bd6', params=params)
     else:
-        print('Invalid request')
+        print(f"Invalid request: {client_request}")
+        client_socket.send(f"Invalid request: {client_request}".encode('ascii'))
+        client_socket.close()
+        return
 
     # Process and save response
-    if  response.status_code == 200:
+    if response.status_code == 200:
         requested_data = response.json()
-        filename = client_name,'_',client_request,'.json'
+        filename = f"client_data_{client_request}.json"
         with open(filename, 'w') as f:
-            client_socket.send(json.dump(requested_data, f, indent=4).encode('ascii'))
-        print('requested data saved to' , filename)
-
+            json.dump(requested_data, f, indent=4)
+        print(f'Data saved to {filename}')
+        
+        # Send back data to the client
+        client_socket.send(json.dumps(requested_data, indent=4).encode('ascii'))
     else:
-        print('Error in processing your request:', response.text)
-        print('Error code:', response.status_code)
+        error_message = f"Error in processing your request: {response.text}, Error code: {response.status_code}"
+        print(error_message)
+        client_socket.send(error_message.encode('ascii'))
 
     client_socket.close()
 
-#Multithreading
+# Multithreading
 while True:
     active_server_socket, address = passive_server_socket.accept()
-    thread = threading.Thread(target=handle_client, args=(active_server_socket,address))
+    thread = threading.Thread(target=handle_client, args=(active_server_socket,))
     thread.start()
