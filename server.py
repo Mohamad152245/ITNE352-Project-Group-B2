@@ -2,13 +2,21 @@ import socket
 import threading
 import json
 import requests
+import ssl
+import os
 
 api_key = '27d7c542059d496ba63e8330cd595bd6'
 
 print('----------------Server is Online----------------')
 
+context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+cert_path = os.path.join(current_dir, 'server.crt')
+key_path = os.path.join(current_dir, 'server.key')
+context.load_cert_chain(certfile= cert_path, keyfile= key_path)
+
 passive_server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-passive_server_socket.bind(('172.20.10.3', 1010))
+passive_server_socket.bind(('192.168.100.176', 1010))
 
 print('----------------Server is Waiting----------------')
 passive_server_socket.listen(3)
