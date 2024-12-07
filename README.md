@@ -111,10 +111,19 @@ The client provides an interface for users to interact with the server. It perfo
 ### Additional Concept
 
 #### Server Side Setup
-- The server sets up an SSL context to enable secure communication with clients.
-- **SSL Context**:
-  - `ssl.Purpose.CLIENT_AUTH`: Configures the server to authenticate clients.
-  - `load_cert_chain(certfile, keyfile)`: Loads the server's SSL certificate (`server.crt`) and private key (`server.key`) for secure communication.
+-To enable SSL for secure communication, you need a certificate (.crt file) and a key (.key file). Follow these steps to set up SSL using OpenSSL:
+
+1. Install OpenSSL.
+2. Run the following commands in the OpenSSL terminal:
+   - `openssl genpkey -algorithm RSA -out server.key -aes256`: Generates a private key (`server.key`) with AES256 encryption. You will be prompted to set a password for this key.
+   - `openssl req -new -key server.key -out server.csr`: Generates a certificate signing request (`server.csr`). You need to provide the password set in the previous step and additional details like name, country code, organization, and email address.
+   - `openssl x509 -req -in server.csr -signkey server.key -out server.crt -days 365`: Generates a self-signed certificate (`server.crt`) valid for 365 days.
+
+If the files generated above are not in the same path as `server.py`, you can include an absolute path in the script to ensure it locates `server.crt` and `server.key` in the correct directory. This resolves any `FileNotFound` errors that may occur during script execution.
+
+When setting up the SSL context for the server, you can use the following methods provided by `ssl` module in Python:
+- `ssl.Purpose.CLIENT_AUTH`: Indicates that the server will authenticate clients.
+- `load_cert_chain(certfile, keyfile)`: Loads the server's SSL certificate (`server.crt`) and private key (`server.key`) for secure communication
 
 #### Client Side Setup
 - The client creates an SSL context to establish a secure connection with the server.
