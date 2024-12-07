@@ -59,6 +59,10 @@ The project requires the following external Python libraries:
   ```bash
   pip install requests
 
+ - **`The server requires SSL certificates`**.
+    ```bash
+    openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt -days 365 -nodes
+
 ### System Architecture
 
 The system is designed with a client-server architecture, enabling communication between multiple clients and a single server. The architecture ensures secure data exchange, multithreading for handling multiple client connections, and integration with an external News API for retrieving news data.
