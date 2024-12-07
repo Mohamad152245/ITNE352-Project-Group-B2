@@ -11,7 +11,7 @@ client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Client to server connection
 try:
-    client_socket.connect(('127.0.0.1', 1010))
+    client_socket.connect(('192.168.100.176', 1010))
 except:
     print("Connection failed")
     exit(0)
