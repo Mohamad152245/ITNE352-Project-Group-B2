@@ -59,7 +59,7 @@ The project requires the following external Python libraries:
   ```bash
   pip install requests
 
- - **`The server requires SSL certificates`**.
+ - **`SSL certificates`**:requires SSL certificates
     ```bash
     openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt -days 365 -nodes
 
